@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fitsum Tibebe — Front-End Developer</title>
+
+    <!-- SEO -->
+    <meta
+      name="description"
+      content="Fitsum Tibebe — Front-End Developer from Addis Ababa. React, Next.js, HTML, CSS, JavaScript specialist. View my projects and resume."
+    />
+    <meta
+      name="keywords"
+      content="Fitsum Tibebe, Front-End Developer, React Developer, Addis Ababa, Ethiopia, Portfolio"
+    />
+    <meta name="author" content="Fitsum Tibebe" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Fitsum Tibebe — Front-End Developer" />
+    <meta
+      property="og:description"
+      content="Modern, mobile-first web experiences built with React, Next.js, and JavaScript."
+    />
+    <meta property="og:image" content="assets/images/profile.jpg" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Fitsum Tibebe — Front-End Developer" />
+    <meta
+      name="twitter:description"
+      content="React • Next.js • JavaScript • Mobile-first"
+    />
+    <meta name="twitter:image" content="assets/images/profile.jpg" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Fitsum Tibebe",
+        "jobTitle": "Front-End Developer",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Addis Ababa",
+          "addressCountry": "Ethiopia"
+        },
+        "url": "https://github.com/fitsae",
+        "sameAs": [
+          "https://github.com/fitsae",
+          "https://www.linkedin.com/in/fitsum-tibebe-597b53429"
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <div class="loader" id="loader">
+      <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Navbar -->
+    <header class="nav" id="nav">
+      <div class="nav-inner">
+        <a href="#" class="logo">
+          <img
+            src="assets/images/logo.svg"
+            alt="Fitsum Tibebe logo"
+            id="logoImg"
+          />
+          <span>Fitsum<span class="accent">.</span></span>
+        </a>
+        <nav class="nav-links" id="navLinks">
+          <a href="#home" class="nav-link active">Home</a>
+          <a href="#about" class="nav-link">About</a>
+          <a href="#projects" class="nav-link">Projects</a>
+          <a href="#mocks" class="nav-link">Mocks</a>
+          <a href="#resume" class="nav-link">Resume</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+        <button class="menu-btn" id="menuBtn" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <div class="hero-text">
+          <p class="hero-greeting">Hello, I'm</p>
+          <h1 class="hero-name">Fitsum Tibebe</h1>
+          <h2 class="hero-title">
+            <span class="typing" id="typing"></span
+            ><span class="cursor">|</span>
+          </h2>
+          <p class="hero-tagline" id="tagline"></p>
+          <div class="hero-cta">
+            <a href="#projects" class="btn btn-primary"
+              >View Projects <i class="fas fa-arrow-right"></i
+            ></a>
+            <a href="#" class="btn btn-ghost" id="downloadResume">
+              <i class="fas fa-download"></i> Download CV
+            </a>
+          </div>
+          <div class="hero-socials">
+            <a
+              href="https://github.com/fitsae"
+              target="_blank"
+              rel="noopener"
+              aria-label="GitHub"
+              ><i class="fab fa-github"></i
+            ></a>
+            <a
+              href="https://www.linkedin.com/in/fitsum-tibebe-597b53429"
+              target="_blank"
+              rel="noopener"
+              aria-label="LinkedIn"
+              ><i class="fab fa-linkedin"></i
+            ></a>
+            <a href="mailto:fitsum.tibebe.dev@gmail.com" aria-label="Email"
+              ><i class="fas fa-envelope"></i
+            ></a>
+          </div>
+        </div>
+        <div class="hero-photo">
+          <div class="photo-ring"></div>
+          <img src="assets/images/profile.jpg" alt="Fitsum Tibebe" />
+        </div>
+      </div>
+      <a href="#about" class="scroll-down" aria-label="Scroll">
+        <i class="fas fa-chevron-down"></i>
+      </a>
+    </section>
+
+    <!-- About -->
+    <section class="section" id="about">
+      <div class="container">
+        <h2 class="section-title reveal">
+          About <span class="accent">Me</span>
+        </h2>
+        <div class="about-grid">
+          <div class="about-text reveal">
+            <p id="bioText"></p>
+            <div class="about-stats">
+              <div class="stat">
+                <span class="stat-num" data-count="3.98">0</span
+                ><span>GPA</span>
+              </div>
+              <div class="stat">
+                <span class="stat-num" data-count="6">0</span
+                ><span>Months Training</span>
+              </div>
+              <div class="stat">
+                <span class="stat-num" data-count="3">0</span
+                ><span>Projects</span>
+              </div>
+            </div>
+          </div>
+          <div class="skills reveal">
+            <h3>Skills</h3>
+            <div id="skillsContainer"></div>
+          </div>
+        </div>
+
+        <h3 class="subsection-title reveal">Experience</h3>
+        <div class="timeline" id="experienceContainer"></div>
+
+        <h3 class="subsection-title reveal">Education</h3>
+        <div class="timeline" id="educationContainer"></div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section class="section section-dark" id="projects">
+      <div class="container">
+        <h2 class="section-title reveal">
+          My <span class="accent">Projects</span>
+        </h2>
+        <div class="filter-bar reveal" id="filterBar"></div>
+        <div class="projects-grid" id="projectsGrid"></div>
+      </div>
+    </section>
+
+    <!-- Mocks -->
+    <section class="section" id="mocks">
+      <div class="container">
+        <h2 class="section-title reveal">
+          Design <span class="accent">Mocks</span>
+        </h2>
+        <div class="mocks-grid" id="mocksGrid"></div>
+      </div>
+    </section>
+
+    <!-- Resume / PDFs -->
+    <section class="section section-dark" id="resume">
+      <div class="container">
+        <h2 class="section-title reveal">
+          Documents & <span class="accent">PDFs</span>
+        </h2>
+        <div class="pdfs-grid" id="pdfsGrid"></div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+      <div class="container">
+        <h2 class="section-title reveal">
+          Get In <span class="accent">Touch</span>
+        </h2>
+        <div class="contact-grid">
+          <div class="contact-info reveal">
+            <a href="mailto:fitsum.tibebe.dev@gmail.com" class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <div>
+                <h4>Email</h4>
+                <p>fitsum.tibebe.dev@gmail.com</p>
+              </div>
+            </a>
+            <a href="tel:+251963168909" class="contact-item">
+              <i class="fas fa-phone"></i>
+              <div>
+                <h4>Phone</h4>
+                <p>+251 963 168 909</p>
+              </div>
+            </a>
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <div>
+                <h4>Location</h4>
+                <p>Addis Ababa, Ethiopia</p>
+              </div>
+            </div>
+          </div>
+          <form class="contact-form reveal" id="contactForm">
+            <input type="text" name="name" placeholder="Your Name" required />
+            <input
+              type="email"
+              name="email"
+              placeholder="Your Email"
+              required
+            />
+            <textarea
+              name="message"
+              rows="5"
+              placeholder="Your Message"
+              required
+            ></textarea>
+            <button type="submit" class="btn btn-primary">
+              Send Message <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>
+        © <span id="year"></span> Fitsum Tibebe. Built with ❤️ in Addis Ababa.
+      </p>
+    </footer>
+
+    <script src="js/renderer.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

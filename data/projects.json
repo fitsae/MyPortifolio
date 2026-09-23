@@ -1,0 +1,40 @@
+{
+  "projects": [
+    {
+      "id": "temar",
+      "title": "Temar — Online Learning Platform",
+      "subtitle": "Final Year Project",
+      "description": "Full online learning platform with course management, user auth, and progress tracking.",
+      "role": "Frontend + DB Design + SRS Documentation",
+      "tech": ["HTML", "CSS", "JavaScript", "Django", "SQL"],
+      "image": "assets/images/projects/temar.png",
+      "live": "https://temar.onrender.com/",
+      "github": "",
+      "featured": true
+    },
+    {
+      "id": "birr",
+      "title": "Birr Budget Expense Tracker",
+      "subtitle": "Mobile-First Web App",
+      "description": "Track expenses in Ethiopian Birr with categories and running balance.",
+      "role": "Full Frontend Development",
+      "tech": ["HTML", "CSS", "JavaScript"],
+      "image": "assets/images/projects/birr.png",
+      "live": "https://fitsae.github.io/BirrExpenseTracker/",
+      "github": "https://github.com/fitsae/BirrExpenseTracker",
+      "featured": true
+    },
+    {
+      "id": "campus",
+      "title": "Campus Connect",
+      "subtitle": "Mobile-First Web App",
+      "description": "Campus community app built with React and deployed on Vercel.",
+      "role": "React Frontend Developer",
+      "tech": ["React", "HTML", "CSS", "JavaScript"],
+      "image": "assets/images/projects/campus.png",
+      "live": "https://campus-connect-five-rose.vercel.app/",
+      "github": "",
+      "featured": true
+    }
+  ]
+}

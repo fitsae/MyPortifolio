@@ -1,0 +1,11 @@
+{
+  "mocks": [
+    {
+      "id": "temar-ui",
+      "title": "Temar UI Mockup",
+      "description": "Homepage design mockup.",
+      "image": "assets/images/projects/temar.png",
+      "tags": ["UI", "Web"]
+    }
+  ]
+}

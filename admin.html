@@ -1,0 +1,1917 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Content Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0f172a;
+        --bg-2: #1e293b;
+        --bg-3: #334155;
+        --accent: #3b82f6;
+        --accent-2: #60a5fa;
+        --success: #10b981;
+        --danger: #ef4444;
+        --text: #f1f5f9;
+        --muted: #94a3b8;
+        --border: #334155;
+        --radius: 12px;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        line-height: 1.5;
+      }
+
+      /* Header */
+      .topbar {
+        background: var(--bg-2);
+        padding: 16px 24px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .topbar h1 {
+        font-size: 20px;
+        font-weight: 800;
+      }
+      .topbar h1 span {
+        color: var(--accent);
+      }
+      .topbar-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      /* Layout */
+      .layout {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        min-height: calc(100vh - 65px);
+      }
+      .sidebar {
+        background: var(--bg-2);
+        border-right: 1px solid var(--border);
+        padding: 20px 12px;
+        position: sticky;
+        top: 65px;
+        height: calc(100vh - 65px);
+        overflow-y: auto;
+      }
+      .sidebar button {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 12px 16px;
+        background: transparent;
+        border: none;
+        color: var(--muted);
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: left;
+        transition: 0.2s;
+        margin-bottom: 4px;
+      }
+      .sidebar button:hover {
+        background: var(--bg-3);
+        color: var(--text);
+      }
+      .sidebar button.active {
+        background: var(--accent);
+        color: #fff;
+      }
+      .sidebar button i {
+        width: 18px;
+        text-align: center;
+      }
+
+      .main {
+        padding: 32px;
+        max-width: 1000px;
+      }
+
+      .panel {
+        display: none;
+      }
+      .panel.active {
+        display: block;
+        animation: fadeIn 0.3s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .panel h2 {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .panel .panel-desc {
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 24px;
+      }
+
+      /* Cards */
+      .card {
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin-bottom: 20px;
+      }
+      .card h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--accent-2);
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      /* Inputs */
+      label {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 6px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 11px 14px;
+        margin-bottom: 14px;
+        background: var(--bg);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+        transition: 0.2s;
+      }
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      input[type="file"] {
+        padding: 9px;
+        cursor: pointer;
+      }
+      input[type="file"]::file-selector-button {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 6px;
+        margin-right: 12px;
+        font-family: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .row-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .btn:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+      }
+      .btn-success {
+        background: var(--success);
+      }
+      .btn-success:hover {
+        background: #059669;
+      }
+      .btn-danger {
+        background: var(--danger);
+      }
+      .btn-danger:hover {
+        background: #dc2626;
+      }
+      .btn-ghost {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text);
+      }
+      .btn-ghost:hover {
+        background: var(--bg-3);
+      }
+      .btn-sm {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+
+      /* List items */
+      .item-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 16px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        gap: 12px;
+      }
+      .item-row-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .item-row-info strong {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .item-row-info span {
+        font-size: 12px;
+        color: var(--muted);
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .item-row-actions {
+        display: flex;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      /* Skill tag editor */
+      .tag-input-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 8px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 14px;
+        min-height: 46px;
+      }
+      .tag-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 10px;
+        background: var(--accent);
+        color: #fff;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .tag-chip button {
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        padding: 0;
+        opacity: 0.8;
+      }
+      .tag-chip button:hover {
+        opacity: 1;
+      }
+      .tag-input-wrap input {
+        flex: 1;
+        min-width: 120px;
+        border: none;
+        background: transparent;
+        padding: 4px;
+        margin: 0;
+        color: var(--text);
+      }
+      .tag-input-wrap input:focus {
+        box-shadow: none;
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--success);
+        color: #fff;
+        padding: 14px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transform: translateY(120%);
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .toast.show {
+        transform: translateY(0);
+      }
+      .toast.error {
+        background: var(--danger);
+      }
+
+      /* Mobile */
+      .mobile-tabs {
+        display: none;
+        padding: 12px 16px;
+        background: var(--bg-2);
+        border-bottom: 1px solid var(--border);
+        gap: 8px;
+        overflow-x: auto;
+        position: sticky;
+        top: 65px;
+        z-index: 99;
+      }
+      .mobile-tabs button {
+        white-space: nowrap;
+        padding: 8px 14px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .mobile-tabs button.active {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      @media (max-width: 860px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          display: none;
+        }
+        .mobile-tabs {
+          display: flex;
+        }
+        .main {
+          padding: 20px 16px;
+        }
+        .row,
+        .row-3 {
+          grid-template-columns: 1fr;
+        }
+        .topbar {
+          padding: 12px 16px;
+        }
+        .topbar h1 {
+          font-size: 16px;
+        }
+      }
+
+      /* Empty state */
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .empty-state i {
+        font-size: 40px;
+        margin-bottom: 12px;
+        opacity: 0.3;
+        display: block;
+      }
+
+      /* JSON preview */
+      pre.json-preview {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        padding: 16px;
+        border-radius: 8px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        overflow-x: auto;
+        max-height: 400px;
+        color: #7dd3fc;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top bar -->
+    <div class="topbar">
+      <h1>🛠 <span>Content</span> Manager</h1>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" onclick="importAll()">
+          <i class="fas fa-upload"></i> Import All
+        </button>
+        <a href="index.html" target="_blank" class="btn btn-success btn-sm">
+          <i class="fas fa-eye"></i> Preview Site
+        </a>
+      </div>
+    </div>
+
+    <!-- Mobile tabs -->
+    <div class="mobile-tabs" id="mobileTabs"></div>
+
+    <!-- Layout -->
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <button class="tab-btn active" data-tab="profile">
+          <i class="fas fa-user"></i> Profile
+        </button>
+        <button class="tab-btn" data-tab="skills">
+          <i class="fas fa-code"></i> Skills
+        </button>
+        <button class="tab-btn" data-tab="experience">
+          <i class="fas fa-briefcase"></i> Experience
+        </button>
+        <button class="tab-btn" data-tab="education">
+          <i class="fas fa-graduation-cap"></i> Education
+        </button>
+        <button class="tab-btn" data-tab="projects">
+          <i class="fas fa-folder"></i> Projects
+        </button>
+        <button class="tab-btn" data-tab="pdfs">
+          <i class="fas fa-file-pdf"></i> PDFs
+        </button>
+        <button class="tab-btn" data-tab="mocks">
+          <i class="fas fa-image"></i> Mocks
+        </button>
+        <button class="tab-btn" data-tab="export">
+          <i class="fas fa-download"></i> Export
+        </button>
+      </aside>
+
+      <!-- Main content -->
+      <main class="main">
+        <!-- ==================== PROFILE ==================== -->
+        <section class="panel active" id="panel-profile">
+          <h2>Profile</h2>
+          <p class="panel-desc">
+            Edit your name, title, bio, and contact info.
+          </p>
+
+          <div class="card">
+            <h3>Basic Info</h3>
+            <div class="row">
+              <div>
+                <label>Full Name</label>
+                <input id="pf-name" placeholder="Fitsum Tibebe" />
+              </div>
+              <div>
+                <label>Job Title</label>
+                <input id="pf-title" placeholder="Front-End Developer" />
+              </div>
+            </div>
+            <label>Tagline</label>
+            <input
+              id="pf-tagline"
+              placeholder="I build fast, modern, mobile-first web experiences."
+            />
+            <label>Bio</label>
+            <textarea
+              id="pf-bio"
+              rows="4"
+              placeholder="Short paragraph about you..."
+            ></textarea>
+          </div>
+
+          <div class="card">
+            <h3>Contact</h3>
+            <div class="row">
+              <div>
+                <label>Email</label>
+                <input id="pf-email" type="email" />
+              </div>
+              <div>
+                <label>Phone</label>
+                <input id="pf-phone" />
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label>Location</label>
+                <input id="pf-location" />
+              </div>
+              <div>
+                <label>Resume path</label>
+                <input id="pf-resume" placeholder="assets/pdfs/resume.pdf" />
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label>GitHub URL</label>
+                <input id="pf-github" />
+              </div>
+              <div>
+                <label>LinkedIn URL</label>
+                <input id="pf-linkedin" />
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Typing Titles (Animated Hero)</h3>
+            <p
+              style="color: var(--muted); font-size: 13px; margin-bottom: 12px"
+            >
+              These are the rotating titles in your hero section. Press
+              <b>Enter</b> to add each one.
+            </p>
+            <div class="tag-input-wrap" id="roles-wrap">
+              <input id="roles-input" placeholder="Type title + Enter" />
+            </div>
+            <button class="btn" onclick="saveRoles()">
+              <i class="fas fa-save"></i> Save Titles
+            </button>
+          </div>
+          <div class="card">
+            <h3>Profile Photo</h3>
+            <label>Upload new photo</label>
+            <input type="file" id="pf-photo-file" accept="image/*" />
+            <p style="color: var(--muted); font-size: 12px; margin-top: -8px">
+              Uploaded photo is stored as base64. For real files, place it at
+              <code>assets/images/profile.jpg</code>.
+            </p>
+          </div>
+
+          <button class="btn btn-success" onclick="saveProfile()">
+            <i class="fas fa-save"></i> Save Profile
+          </button>
+        </section>
+
+        <!-- ==================== SKILLS ==================== -->
+        <section class="panel" id="panel-skills">
+          <h2>Skills</h2>
+          <p class="panel-desc">Add skill groups and their items.</p>
+
+          <div class="card">
+            <h3>Add Skill Group</h3>
+            <div class="row">
+              <div>
+                <label>Category Name</label>
+                <input id="sk-category" placeholder="e.g. Frontend" />
+              </div>
+              <div>
+                <label>Skills (press Enter to add)</label>
+                <div class="tag-input-wrap" id="sk-tags-wrap">
+                  <input id="sk-tag-input" placeholder="Type skill + Enter" />
+                </div>
+              </div>
+            </div>
+            <button class="btn" onclick="addSkillGroup()">
+              <i class="fas fa-plus"></i> Add Group
+            </button>
+          </div>
+
+          <div class="card">
+            <h3>Current Skill Groups</h3>
+            <div id="skillList"></div>
+          </div>
+
+          <button class="btn btn-success" onclick="saveSkills()">
+            <i class="fas fa-save"></i> Save Skills
+          </button>
+        </section>
+
+        <!-- ==================== EXPERIENCE ==================== -->
+        <section class="panel" id="panel-experience">
+          <h2>Experience</h2>
+          <p class="panel-desc">Add or edit your work history.</p>
+
+          <div class="card">
+            <h3 id="exp-form-title">Add Experience</h3>
+            <input type="hidden" id="exp-edit-id" />
+            <div class="row">
+              <div>
+                <label>Role / Job Title</label>
+                <input id="exp-role" placeholder="IT Support Intern" />
+              </div>
+              <div>
+                <label>Company</label>
+                <input
+                  id="exp-company"
+                  placeholder="Equatorial Business Group"
+                />
+              </div>
+            </div>
+            <div class="row-3">
+              <div>
+                <label>Location</label>
+                <input id="exp-location" placeholder="Addis Ababa, Ethiopia" />
+              </div>
+              <div>
+                <label>Period</label>
+                <input id="exp-period" placeholder="2024" />
+              </div>
+              <div></div>
+            </div>
+            <label>Bullet Points (one per line)</label>
+            <textarea
+              id="exp-points"
+              rows="4"
+              placeholder="Provided technical support to staff...&#10;Assisted with network maintenance..."
+            ></textarea>
+            <div class="btn-group">
+              <button class="btn" onclick="saveExperience()">
+                <i class="fas fa-save"></i> Save Experience
+              </button>
+              <button class="btn btn-ghost" onclick="clearExperienceForm()">
+                <i class="fas fa-times"></i> Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Current Experience</h3>
+            <div id="expList"></div>
+          </div>
+
+          <button class="btn btn-success" onclick="saveExperienceToStore()">
+            <i class="fas fa-save"></i> Save All Experience
+          </button>
+        </section>
+
+        <!-- ==================== EDUCATION ==================== -->
+        <section class="panel" id="panel-education">
+          <h2>Education</h2>
+          <p class="panel-desc">Add or edit your degrees and training.</p>
+
+          <div class="card">
+            <h3 id="edu-form-title">Add Education</h3>
+            <input type="hidden" id="edu-edit-id" />
+            <div class="row">
+              <div>
+                <label>Degree / Program</label>
+                <input id="edu-degree" placeholder="BSc in Computer Science" />
+              </div>
+              <div>
+                <label>School</label>
+                <input id="edu-school" placeholder="CPU College" />
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label>Location</label>
+                <input id="edu-location" placeholder="Addis Ababa, Ethiopia" />
+              </div>
+              <div>
+                <label>Period</label>
+                <input id="edu-period" placeholder="2021 – 2025" />
+              </div>
+            </div>
+            <label>Details</label>
+            <input id="edu-details" placeholder="GPA: 3.98 / 4.00" />
+            <div class="btn-group">
+              <button class="btn" onclick="saveEducation()">
+                <i class="fas fa-save"></i> Save Education
+              </button>
+              <button class="btn btn-ghost" onclick="clearEducationForm()">
+                <i class="fas fa-times"></i> Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Current Education</h3>
+            <div id="eduList"></div>
+          </div>
+
+          <button class="btn btn-success" onclick="saveEducationToStore()">
+            <i class="fas fa-save"></i> Save All Education
+          </button>
+        </section>
+
+        <!-- ==================== PROJECTS ==================== -->
+        <section class="panel" id="panel-projects">
+          <h2>Projects</h2>
+          <p class="panel-desc">Add and manage portfolio projects.</p>
+
+          <div class="card">
+            <h3 id="proj-form-title">Add Project</h3>
+            <input type="hidden" id="proj-edit-id" />
+            <div class="row">
+              <div>
+                <label>Title</label>
+                <input
+                  id="proj-title"
+                  placeholder="Temar — Online Learning Platform"
+                />
+              </div>
+              <div>
+                <label>Subtitle</label>
+                <input id="proj-subtitle" placeholder="Final Year Project" />
+              </div>
+            </div>
+            <label>Description</label>
+            <textarea
+              id="proj-description"
+              rows="3"
+              placeholder="What does the project do?"
+            ></textarea>
+            <div class="row">
+              <div>
+                <label>Your Role</label>
+                <input id="proj-role" placeholder="Frontend + DB Design" />
+              </div>
+              <div>
+                <label>Tech (comma separated)</label>
+                <input id="proj-tech" placeholder="React, JavaScript, CSS" />
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <label>Live URL</label>
+                <input id="proj-live" placeholder="https://..." />
+              </div>
+              <div>
+                <label>GitHub URL</label>
+                <input id="proj-github" placeholder="https://github.com/..." />
+              </div>
+            </div>
+            <label>Image</label>
+            <input type="file" id="proj-image" accept="image/*" />
+            <div class="btn-group">
+              <button class="btn" onclick="saveProject()">
+                <i class="fas fa-save"></i> Save Project
+              </button>
+              <button class="btn btn-ghost" onclick="clearProjectForm()">
+                <i class="fas fa-times"></i> Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Current Projects</h3>
+            <div id="projList"></div>
+          </div>
+        </section>
+
+        <!-- ==================== PDFs ==================== -->
+        <section class="panel" id="panel-pdfs">
+          <h2>PDFs</h2>
+          <p class="panel-desc">Add documents (resume, certificates, SRS).</p>
+
+          <div class="card">
+            <h3 id="pdf-form-title">Add PDF</h3>
+            <input type="hidden" id="pdf-edit-id" />
+            <label>Title</label>
+            <input id="pdf-title" placeholder="My Resume" />
+            <label>Description</label>
+            <textarea id="pdf-description" rows="2"></textarea>
+            <label>File path</label>
+            <input id="pdf-file" placeholder="assets/pdfs/resume.pdf" />
+            <div class="btn-group">
+              <button class="btn" onclick="savePDF()">
+                <i class="fas fa-save"></i> Save PDF
+              </button>
+              <button class="btn btn-ghost" onclick="clearPDFForm()">
+                <i class="fas fa-times"></i> Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Current PDFs</h3>
+            <div id="pdfList"></div>
+          </div>
+        </section>
+
+        <!-- ==================== MOCKS ==================== -->
+        <section class="panel" id="panel-mocks">
+          <h2>Mocks</h2>
+          <p class="panel-desc">Add design mockups and UI snapshots.</p>
+
+          <div class="card">
+            <h3 id="mock-form-title">Add Mock</h3>
+            <input type="hidden" id="mock-edit-id" />
+            <label>Title</label>
+            <input id="mock-title" placeholder="Homepage Mockup" />
+            <label>Description</label>
+            <textarea id="mock-description" rows="2"></textarea>
+            <label>Image</label>
+            <input type="file" id="mock-image" accept="image/*" />
+            <div class="btn-group">
+              <button class="btn" onclick="saveMock()">
+                <i class="fas fa-save"></i> Save Mock
+              </button>
+              <button class="btn btn-ghost" onclick="clearMockForm()">
+                <i class="fas fa-times"></i> Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Current Mocks</h3>
+            <div id="mockList"></div>
+          </div>
+        </section>
+
+        <!-- ==================== EXPORT ==================== -->
+        <section class="panel" id="panel-export">
+          <h2>Export & Import</h2>
+          <p class="panel-desc">
+            Download each JSON file and commit them to your
+            <code>data/</code> folder on GitHub. Or import existing JSON to
+            resume editing.
+          </p>
+
+          <div class="card">
+            <h3>Export Individual Files</h3>
+            <div class="btn-group">
+              <button class="btn" onclick="exportJSON('profile')">
+                <i class="fas fa-download"></i> profile.json
+              </button>
+              <button class="btn" onclick="exportJSON('projects')">
+                <i class="fas fa-download"></i> projects.json
+              </button>
+              <button class="btn" onclick="exportJSON('pdfs')">
+                <i class="fas fa-download"></i> pdfs.json
+              </button>
+              <button class="btn" onclick="exportJSON('mocks')">
+                <i class="fas fa-download"></i> mocks.json
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Preview JSON</h3>
+            <div class="btn-group" style="margin-bottom: 14px">
+              <button
+                class="btn btn-ghost btn-sm"
+                onclick="previewJSON('profile')"
+              >
+                profile.json
+              </button>
+              <button
+                class="btn btn-ghost btn-sm"
+                onclick="previewJSON('projects')"
+              >
+                projects.json
+              </button>
+              <button
+                class="btn btn-ghost btn-sm"
+                onclick="previewJSON('pdfs')"
+              >
+                pdfs.json
+              </button>
+              <button
+                class="btn btn-ghost btn-sm"
+                onclick="previewJSON('mocks')"
+              >
+                mocks.json
+              </button>
+            </div>
+            <pre class="json-preview" id="jsonPreview">
+Click a button above to preview JSON.</pre
+            >
+          </div>
+
+          <div class="card">
+            <h3>Import Existing JSON</h3>
+            <p
+              style="color: var(--muted); font-size: 13px; margin-bottom: 12px"
+            >
+              Select a JSON file (e.g. <code>profile.json</code>) — the data
+              will load into the editor.
+            </p>
+            <input
+              type="file"
+              id="importFile"
+              accept=".json"
+              onchange="handleImport(event)"
+            />
+          </div>
+
+          <div class="card">
+            <h3 style="color: var(--danger)">Danger Zone</h3>
+            <p
+              style="color: var(--muted); font-size: 13px; margin-bottom: 12px"
+            >
+              Clears all data from browser storage. Exported JSON files on disk
+              are NOT affected.
+            </p>
+            <button class="btn btn-danger" onclick="clearAllData()">
+              <i class="fas fa-trash"></i> Clear All Local Data
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+      <i class="fas fa-check-circle"></i>
+      <span id="toastMsg">Saved</span>
+    </div>
+
+    <script>
+      // ============================================
+      // STATE
+      // ============================================
+      const store = {
+        profile: JSON.parse(localStorage.getItem("profile") || "null") || {
+          name: "Fitsum Tibebe",
+          title: "Front-End Developer",
+          tagline: "I build fast, modern, mobile-first web experiences.",
+          bio: "Computer Science graduate with a 3.98 GPA and 6-month advanced front-end training from IBt College of Canada.",
+          email: "fitsum.tibebe.dev@gmail.com",
+          phone: "+251 963 168 909",
+          location: "Addis Ababa, Ethiopia",
+          github: "https://github.com/fitsae",
+          linkedin: "https://www.linkedin.com/in/fitsum-tibebe-597b53429",
+          resume: "assets/pdfs/fitsum-resume.pdf",
+          photo: "assets/images/profile.jpg",
+          logo: "assets/images/logo.svg",
+          skills: [],
+          experience: [],
+          education: [],
+        },
+        projects: JSON.parse(
+          localStorage.getItem("projects") || '{"projects":[]}',
+        ),
+        pdfs: JSON.parse(localStorage.getItem("pdfs") || '{"pdfs":[]}'),
+        mocks: JSON.parse(localStorage.getItem("mocks") || '{"mocks":[]}'),
+      };
+
+      // ============================================
+      // UTILITIES
+      // ============================================
+      function persist() {
+        localStorage.setItem("profile", JSON.stringify(store.profile));
+        localStorage.setItem("projects", JSON.stringify(store.projects));
+        localStorage.setItem("pdfs", JSON.stringify(store.pdfs));
+        localStorage.setItem("mocks", JSON.stringify(store.mocks));
+      }
+
+      function toast(msg, isError = false) {
+        const t = document.getElementById("toast");
+        const m = document.getElementById("toastMsg");
+        m.textContent = msg;
+        t.classList.toggle("error", isError);
+        t.querySelector("i").className = isError
+          ? "fas fa-exclamation-circle"
+          : "fas fa-check-circle";
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 2500);
+      }
+
+      function uid() {
+        return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      }
+
+      function readFile(input, cb) {
+        const file = input.files[0];
+        if (!file) return cb("");
+        const r = new FileReader();
+        r.onload = (e) => cb(e.target.result);
+        r.readAsDataURL(file);
+      }
+
+      function esc(str) {
+        return String(str || "").replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[m],
+        );
+      }
+
+      // ============================================
+      // TABS
+      // ============================================
+      const tabs = [
+        "profile",
+        "skills",
+        "experience",
+        "education",
+        "projects",
+        "pdfs",
+        "mocks",
+        "export",
+      ];
+      const tabIcons = {
+        profile: "👤",
+        skills: "💻",
+        experience: "💼",
+        education: "🎓",
+        projects: "📁",
+        pdfs: "📄",
+        mocks: "🖼",
+        export: "⬇️",
+      };
+
+      function switchTab(tab) {
+        document.querySelectorAll(".tab-btn").forEach((b) => {
+          b.classList.toggle("active", b.dataset.tab === tab);
+        });
+        document.querySelectorAll(".panel").forEach((p) => {
+          p.classList.toggle("active", p.id === "panel-" + tab);
+        });
+        document.querySelectorAll(".mobile-tabs button").forEach((b) => {
+          b.classList.toggle("active", b.dataset.tab === tab);
+        });
+      }
+
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+      });
+
+      // Mobile tabs
+      const mt = document.getElementById("mobileTabs");
+      mt.innerHTML = tabs
+        .map(
+          (t) =>
+            `<button class="tab-btn ${t === "profile" ? "active" : ""}" data-tab="${t}">${tabIcons[t]} ${t}</button>`,
+        )
+        .join("");
+      mt.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+      });
+
+      // ============================================
+      // PROFILE
+      // ============================================
+      function loadProfile() {
+        const p = store.profile;
+        document.getElementById("pf-name").value = p.name || "";
+        document.getElementById("pf-title").value = p.title || "";
+        document.getElementById("pf-tagline").value = p.tagline || "";
+        document.getElementById("pf-bio").value = p.bio || "";
+        document.getElementById("pf-email").value = p.email || "";
+        document.getElementById("pf-phone").value = p.phone || "";
+        document.getElementById("pf-location").value = p.location || "";
+        document.getElementById("pf-resume").value = p.resume || "";
+        document.getElementById("pf-github").value = p.github || "";
+        document.getElementById("pf-linkedin").value = p.linkedin || "";
+      }
+
+      function saveProfile() {
+        const p = store.profile;
+        p.name = document.getElementById("pf-name").value.trim();
+        p.title = document.getElementById("pf-title").value.trim();
+        p.tagline = document.getElementById("pf-tagline").value.trim();
+        p.bio = document.getElementById("pf-bio").value.trim();
+        p.email = document.getElementById("pf-email").value.trim();
+        p.phone = document.getElementById("pf-phone").value.trim();
+        p.location = document.getElementById("pf-location").value.trim();
+        p.resume = document.getElementById("pf-resume").value.trim();
+        p.github = document.getElementById("pf-github").value.trim();
+        p.linkedin = document.getElementById("pf-linkedin").value.trim();
+
+        readFile(document.getElementById("pf-photo-file"), (img) => {
+          if (img) p.photo = img;
+          persist();
+          toast("Profile saved");
+        });
+      }
+
+      // ============================================
+      // SKILLS
+      // ============================================
+      let skillTagsBuffer = [];
+
+      function renderSkillTags() {
+        const wrap = document.getElementById("sk-tags-wrap");
+        const input = document.getElementById("sk-tag-input");
+        wrap.querySelectorAll(".tag-chip").forEach((c) => c.remove());
+        skillTagsBuffer.forEach((tag, i) => {
+          const chip = document.createElement("span");
+          chip.className = "tag-chip";
+          chip.innerHTML = `${esc(tag)} <button type="button" data-i="${i}">×</button>`;
+          chip.querySelector("button").addEventListener("click", () => {
+            skillTagsBuffer.splice(i, 1);
+            renderSkillTags();
+          });
+          wrap.insertBefore(chip, input);
+        });
+      }
+
+      document
+        .getElementById("sk-tag-input")
+        .addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === ",") {
+            e.preventDefault();
+            const v = e.target.value.trim().replace(/,$/, "");
+            if (v && !skillTagsBuffer.includes(v)) {
+              skillTagsBuffer.push(v);
+              renderSkillTags();
+            }
+            e.target.value = "";
+          }
+        });
+
+      function addSkillGroup() {
+        const cat = document.getElementById("sk-category").value.trim();
+        if (!cat) return toast("Category name required", true);
+        if (!skillTagsBuffer.length)
+          return toast("Add at least one skill", true);
+
+        const existing = store.profile.skills.findIndex(
+          (s) => s.category === cat,
+        );
+        if (existing > -1) {
+          store.profile.skills[existing].items = [...skillTagsBuffer];
+        } else {
+          store.profile.skills.push({
+            category: cat,
+            items: [...skillTagsBuffer],
+          });
+        }
+        skillTagsBuffer = [];
+        renderSkillTags();
+        document.getElementById("sk-category").value = "";
+        renderSkillList();
+        persist();
+        toast("Skill group added");
+      }
+
+      function renderSkillList() {
+        const el = document.getElementById("skillList");
+        if (!store.profile.skills.length) {
+          el.innerHTML =
+            '<div class="empty-state"><i class="fas fa-code"></i>No skill groups yet.</div>';
+          return;
+        }
+        el.innerHTML = store.profile.skills
+          .map(
+            (g, i) => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <strong>${esc(g.category)}</strong>
+        <span>${g.items.map(esc).join(" · ")}</span>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editSkillGroup(${i})"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteSkillGroup(${i})"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      function editSkillGroup(i) {
+        const g = store.profile.skills[i];
+        document.getElementById("sk-category").value = g.category;
+        skillTagsBuffer = [...g.items];
+        renderSkillTags();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function deleteSkillGroup(i) {
+        if (!confirm("Delete this skill group?")) return;
+        store.profile.skills.splice(i, 1);
+        renderSkillList();
+        persist();
+        toast("Deleted");
+      }
+
+      function saveSkills() {
+        persist();
+        toast("Skills saved");
+      }
+
+      // ============================================
+      // EXPERIENCE
+      // ============================================
+      function saveExperience() {
+        const id = document.getElementById("exp-edit-id").value;
+        const role = document.getElementById("exp-role").value.trim();
+        if (!role) return toast("Role is required", true);
+
+        const entry = {
+          id: id || uid(),
+          role,
+          company: document.getElementById("exp-company").value.trim(),
+          location: document.getElementById("exp-location").value.trim(),
+          period: document.getElementById("exp-period").value.trim(),
+          points: document
+            .getElementById("exp-points")
+            .value.split("\n")
+            .map((s) => s.trim())
+            .filter(Boolean),
+        };
+
+        if (id) {
+          const i = store.profile.experience.findIndex((e) => e.id === id);
+          if (i > -1) store.profile.experience[i] = entry;
+        } else {
+          store.profile.experience.push(entry);
+        }
+        clearExperienceForm();
+        renderExperienceList();
+        persist();
+        toast("Experience saved");
+      }
+
+      function clearExperienceForm() {
+        [
+          "exp-edit-id",
+          "exp-role",
+          "exp-company",
+          "exp-location",
+          "exp-period",
+          "exp-points",
+        ].forEach((id) => (document.getElementById(id).value = ""));
+        document.getElementById("exp-form-title").textContent =
+          "Add Experience";
+      }
+
+      function editExperience(id) {
+        const e = store.profile.experience.find((x) => x.id === id);
+        if (!e) return;
+        document.getElementById("exp-edit-id").value = e.id;
+        document.getElementById("exp-role").value = e.role || "";
+        document.getElementById("exp-company").value = e.company || "";
+        document.getElementById("exp-location").value = e.location || "";
+        document.getElementById("exp-period").value = e.period || "";
+        document.getElementById("exp-points").value = (e.points || []).join(
+          "\n",
+        );
+        document.getElementById("exp-form-title").textContent =
+          "Edit Experience";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function deleteExperience(id) {
+        if (!confirm("Delete this experience?")) return;
+        store.profile.experience = store.profile.experience.filter(
+          (x) => x.id !== id,
+        );
+        renderExperienceList();
+        persist();
+        toast("Deleted");
+      }
+
+      function renderExperienceList() {
+        const el = document.getElementById("expList");
+        if (!store.profile.experience.length) {
+          el.innerHTML =
+            '<div class="empty-state"><i class="fas fa-briefcase"></i>No experience added.</div>';
+          return;
+        }
+        el.innerHTML = store.profile.experience
+          .map(
+            (e) => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <strong>${esc(e.role)}</strong>
+        <span>${esc(e.company)} · ${esc(e.period)}</span>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editExperience('${e.id}')"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteExperience('${e.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      function saveExperienceToStore() {
+        persist();
+        toast("All experience saved");
+      }
+
+      // ============================================
+      // EDUCATION
+      // ============================================
+      function saveEducation() {
+        const id = document.getElementById("edu-edit-id").value;
+        const degree = document.getElementById("edu-degree").value.trim();
+        if (!degree) return toast("Degree is required", true);
+
+        const entry = {
+          id: id || uid(),
+          degree,
+          school: document.getElementById("edu-school").value.trim(),
+          location: document.getElementById("edu-location").value.trim(),
+          period: document.getElementById("edu-period").value.trim(),
+          details: document.getElementById("edu-details").value.trim(),
+        };
+
+        if (id) {
+          const i = store.profile.education.findIndex((e) => e.id === id);
+          if (i > -1) store.profile.education[i] = entry;
+        } else {
+          store.profile.education.push(entry);
+        }
+        clearEducationForm();
+        renderEducationList();
+        persist();
+        toast("Education saved");
+      }
+
+      function clearEducationForm() {
+        [
+          "edu-edit-id",
+          "edu-degree",
+          "edu-school",
+          "edu-location",
+          "edu-period",
+          "edu-details",
+        ].forEach((id) => (document.getElementById(id).value = ""));
+        document.getElementById("edu-form-title").textContent = "Add Education";
+      }
+
+      function editEducation(id) {
+        const e = store.profile.education.find((x) => x.id === id);
+        if (!e) return;
+        document.getElementById("edu-edit-id").value = e.id;
+        document.getElementById("edu-degree").value = e.degree || "";
+        document.getElementById("edu-school").value = e.school || "";
+        document.getElementById("edu-location").value = e.location || "";
+        document.getElementById("edu-period").value = e.period || "";
+        document.getElementById("edu-details").value = e.details || "";
+        document.getElementById("edu-form-title").textContent =
+          "Edit Education";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function deleteEducation(id) {
+        if (!confirm("Delete this education entry?")) return;
+        store.profile.education = store.profile.education.filter(
+          (x) => x.id !== id,
+        );
+        renderEducationList();
+        persist();
+        toast("Deleted");
+      }
+
+      function renderEducationList() {
+        const el = document.getElementById("eduList");
+        if (!store.profile.education.length) {
+          el.innerHTML =
+            '<div class="empty-state"><i class="fas fa-graduation-cap"></i>No education added.</div>';
+          return;
+        }
+        el.innerHTML = store.profile.education
+          .map(
+            (e) => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <strong>${esc(e.degree)}</strong>
+        <span>${esc(e.school)} · ${esc(e.period)}</span>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editEducation('${e.id}')"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteEducation('${e.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      function saveEducationToStore() {
+        persist();
+        toast("All education saved");
+      }
+
+      // ============================================
+      // PROJECTS
+      // ============================================
+      function saveProject() {
+        const id = document.getElementById("proj-edit-id").value;
+        const title = document.getElementById("proj-title").value.trim();
+        if (!title) return toast("Title required", true);
+
+        readFile(document.getElementById("proj-image"), (img) => {
+          const entry = {
+            id: id || uid(),
+            title,
+            subtitle: document.getElementById("proj-subtitle").value.trim(),
+            description: document
+              .getElementById("proj-description")
+              .value.trim(),
+            role: document.getElementById("proj-role").value.trim(),
+            tech: document
+              .getElementById("proj-tech")
+              .value.split(",")
+              .map((s) => s.trim())
+              .filter(Boolean),
+            live: document.getElementById("proj-live").value.trim(),
+            github: document.getElementById("proj-github").value.trim(),
+            image: img || null,
+            featured: true,
+          };
+
+          if (id) {
+            const i = store.projects.projects.findIndex((p) => p.id === id);
+            if (i > -1) {
+              if (!entry.image) entry.image = store.projects.projects[i].image;
+              store.projects.projects[i] = entry;
+            }
+          } else {
+            if (!entry.image)
+              entry.image = "assets/images/projects/placeholder.png";
+            store.projects.projects.push(entry);
+          }
+          clearProjectForm();
+          renderProjectList();
+          persist();
+          toast("Project saved");
+        });
+      }
+
+      function clearProjectForm() {
+        [
+          "proj-edit-id",
+          "proj-title",
+          "proj-subtitle",
+          "proj-description",
+          "proj-role",
+          "proj-tech",
+          "proj-live",
+          "proj-github",
+        ].forEach((id) => (document.getElementById(id).value = ""));
+        document.getElementById("proj-image").value = "";
+        document.getElementById("proj-form-title").textContent = "Add Project";
+      }
+
+      function editProject(id) {
+        const p = store.projects.projects.find((x) => x.id === id);
+        if (!p) return;
+        document.getElementById("proj-edit-id").value = p.id;
+        document.getElementById("proj-title").value = p.title || "";
+        document.getElementById("proj-subtitle").value = p.subtitle || "";
+        document.getElementById("proj-description").value = p.description || "";
+        document.getElementById("proj-role").value = p.role || "";
+        document.getElementById("proj-tech").value = (p.tech || []).join(", ");
+        document.getElementById("proj-live").value = p.live || "";
+        document.getElementById("proj-github").value = p.github || "";
+        document.getElementById("proj-form-title").textContent = "Edit Project";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function deleteProject(id) {
+        if (!confirm("Delete this project?")) return;
+        store.projects.projects = store.projects.projects.filter(
+          (x) => x.id !== id,
+        );
+        renderProjectList();
+        persist();
+        toast("Deleted");
+      }
+
+      function renderProjectList() {
+        const el = document.getElementById("projList");
+        if (!store.projects.projects.length) {
+          el.innerHTML =
+            '<div class="empty-state"><i class="fas fa-folder"></i>No projects added.</div>';
+          return;
+        }
+        el.innerHTML = store.projects.projects
+          .map(
+            (p) => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <strong>${esc(p.title)}</strong>
+        <span>${esc(p.subtitle || "")} · ${(p.tech || []).slice(0, 4).join(", ")}</span>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editProject('${p.id}')"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProject('${p.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      // ============================================
+      // PDFs
+      // ============================================
+      function savePDF() {
+        const id = document.getElementById("pdf-edit-id").value;
+        const title = document.getElementById("pdf-title").value.trim();
+        if (!title) return toast("Title required", true);
+
+        const entry = {
+          id: id || uid(),
+          title,
+          description: document.getElementById("pdf-description").value.trim(),
+          file:
+            document.getElementById("pdf-file").value.trim() ||
+            "assets/pdfs/placeholder.pdf",
+          category: "Document",
+        };
+
+        if (id) {
+          const i = store.pdfs.pdfs.findIndex((p) => p.id === id);
+          if (i > -1) store.pdfs.pdfs[i] = entry;
+        } else {
+          store.pdfs.pdfs.push(entry);
+        }
+        clearPDFForm();
+        renderPDFList();
+        persist();
+        toast("PDF saved");
+      }
+
+      function clearPDFForm() {
+        ["pdf-edit-id", "pdf-title", "pdf-description", "pdf-file"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("pdf-form-title").textContent = "Add PDF";
+      }
+
+      function editPDF(id) {
+        const p = store.pdfs.pdfs.find((x) => x.id === id);
+        if (!p) return;
+        document.getElementById("pdf-edit-id").value = p.id;
+        document.getElementById("pdf-title").value = p.title || "";
+        document.getElementById("pdf-description").value = p.description || "";
+        document.getElementById("pdf-file").value = p.file || "";
+        document.getElementById("pdf-form-title").textContent = "Edit PDF";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function deletePDF(id) {
+        if (!confirm("Delete this PDF?")) return;
+        store.pdfs.pdfs = store.pdfs.pdfs.filter((x) => x.id !== id);
+        renderPDFList();
+        persist();
+        toast("Deleted");
+      }
+
+      function renderPDFList() {
+        const el = document.getElementById("pdfList");
+        if (!store.pdfs.pdfs.length) {
+          el.innerHTML =
+            '<div class="empty-state"><i class="fas fa-file-pdf"></i>No PDFs added.</div>';
+          return;
+        }
+        el.innerHTML = store.pdfs.pdfs
+          .map(
+            (p) => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <strong>${esc(p.title)}</strong>
+        <span>${esc(p.file)}</span>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editPDF('${p.id}')"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deletePDF('${p.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      // ============================================
+      // MOCKS
+      // ============================================
+      function saveMock() {
+        const id = document.getElementById("mock-edit-id").value;
+        const title = document.getElementById("mock-title").value.trim();
+        if (!title) return toast("Title required", true);
+
+        readFile(document.getElementById("mock-image"), (img) => {
+          const entry = {
+            id: id || uid(),
+            title,
+            description: document
+              .getElementById("mock-description")
+              .value.trim(),
+            image: img || null,
+            tags: ["UI"],
+          };
+
+          if (id) {
+            const i = store.mocks.mocks.findIndex((m) => m.id === id);
+            if (i > -1) {
+              if (!entry.image) entry.image = store.mocks.mocks[i].image;
+              store.mocks.mocks[i] = entry;
+            }
+          } else {
+            if (!entry.image) entry.image = "assets/images/placeholder.png";
+            store.mocks.mocks.push(entry);
+          }
+          clearMockForm();
+          renderMockList();
+          persist();
+          toast("Mock saved");
+        });
+      }
+
+      function clearMockForm() {
+        ["mock-edit-id", "mock-title", "mock-description"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("mock-image").value = "";
+        document.getElementById("mock-form-title").textContent = "Add Mock";
+      }
+
+      function editMock(id) {
+        const m = store.mocks.mocks.find((x) => x.id === id);
+        if (!m) return;
+        document.getElementById("mock-edit-id").value = m.id;
+        document.getElementById("mock-title").value = m.title || "";
+        document.getElementById("mock-description").value = m.description || "";
+        document.getElementById("mock-form-title").textContent = "Edit Mock";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function deleteMock(id) {
+        if (!confirm("Delete this mock?")) return;
+        store.mocks.mocks = store.mocks.mocks.filter((x) => x.id !== id);
+        renderMockList();
+        persist();
+        toast("Deleted");
+      }
+
+      function renderMockList() {
+        const el = document.getElementById("mockList");
+        if (!store.mocks.mocks.length) {
+          el.innerHTML =
+            '<div class="empty-state"><i class="fas fa-image"></i>No mocks added.</div>';
+          return;
+        }
+        el.innerHTML = store.mocks.mocks
+          .map(
+            (m) => `
+    <div class="item-row">
+      <div class="item-row-info">
+        <strong>${esc(m.title)}</strong>
+        <span>${esc(m.description || "")}</span>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editMock('${m.id}')"><i class="fas fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteMock('${m.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      // ============================================
+      // EXPORT / IMPORT
+      // ============================================
+      function buildProfileJSON() {
+        return {
+          name: store.profile.name,
+          title: store.profile.title,
+          tagline: store.profile.tagline,
+          photo: store.profile.photo,
+          logo: store.profile.logo,
+          location: store.profile.location,
+          email: store.profile.email,
+          phone: store.profile.phone,
+          github: store.profile.github,
+          linkedin: store.profile.linkedin,
+          bio: store.profile.bio,
+          resume: store.profile.resume,
+          skills: store.profile.skills.map((s) => ({
+            category: s.category,
+            items: s.items,
+          })),
+          experience: store.profile.experience.map((e) => ({
+            role: e.role,
+            company: e.company,
+            location: e.location,
+            period: e.period,
+            points: e.points,
+          })),
+          education: store.profile.education.map((e) => ({
+            degree: e.degree,
+            school: e.school,
+            location: e.location,
+            period: e.period,
+            details: e.details,
+          })),
+        };
+      }
+
+      function buildProjectsJSON() {
+        return {
+          projects: store.projects.projects.map((p) => ({
+            id: p.id,
+            title: p.title,
+            subtitle: p.subtitle,
+            description: p.description,
+            role: p.role,
+            tech: p.tech,
+            image: p.image,
+            live: p.live,
+            github: p.github,
+            featured: p.featured,
+          })),
+        };
+      }
+
+      function buildPDFsJSON() {
+        return {
+          pdfs: store.pdfs.pdfs.map((p) => ({
+            id: p.id,
+            title: p.title,
+            description: p.description,
+            file: p.file,
+            category: p.category,
+          })),
+        };
+      }
+
+      function buildMocksJSON() {
+        return {
+          mocks: store.mocks.mocks.map((m) => ({
+            id: m.id,
+            title: m.title,
+            description: m.description,
+            image: m.image,
+            tags: m.tags,
+          })),
+        };
+      }
+
+      function exportJSON(type) {
+        let data, filename;
+        if (type === "profile") {
+          data = buildProfileJSON();
+          filename = "profile.json";
+        }
+        if (type === "projects") {
+          data = buildProjectsJSON();
+          filename = "projects.json";
+        }
+        if (type === "pdfs") {
+          data = buildPDFsJSON();
+          filename = "pdfs.json";
+        }
+        if (type === "mocks") {
+          data = buildMocksJSON();
+          filename = "mocks.json";
+        }
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+          type: "application/json",
+        });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        toast(filename + " downloaded");
+      }
+
+      function previewJSON(type) {
+        let data;
+        if (type === "profile") data = buildProfileJSON();
+        if (type === "projects") data = buildProjectsJSON();
+        if (type === "pdfs") data = buildPDFsJSON();
+        if (type === "mocks") data = buildMocksJSON();
+        document.getElementById("jsonPreview").textContent = JSON.stringify(
+          data,
+          null,
+          2,
+        );
+      }
+
+      function handleImport(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const r = new FileReader();
+        r.onload = (ev) => {
+          try {
+            const data = JSON.parse(ev.target.result);
+            const name = file.name.toLowerCase();
+
+            if (name.includes("profile")) {
+              Object.assign(store.profile, data);
+              loadProfile();
+              renderSkillList();
+              renderExperienceList();
+              renderEducationList();
+            } else if (name.includes("project")) {
+              store.projects = data.projects ? data : { projects: data };
+              renderProjectList();
+            } else if (name.includes("pdf")) {
+              store.pdfs = data.pdfs ? data : { pdfs: data };
+              renderPDFList();
+            } else if (name.includes("mock")) {
+              store.mocks = data.mocks ? data : { mocks: data };
+              renderMockList();
+            } else {
+              toast("Unknown file type", true);
+              return;
+            }
+            persist();
+            toast("Imported " + file.name);
+          } catch (err) {
+            toast("Invalid JSON", true);
+          }
+          e.target.value = "";
+        };
+        r.readAsText(file);
+      }
+
+      function importAll() {
+        toast("Use individual import in the Export tab");
+        switchTab("export");
+      }
+
+      function clearAllData() {
+        if (!confirm("Clear ALL local data? This cannot be undone.")) return;
+        localStorage.clear();
+        location.reload();
+      }
+
+      // ============================================
+      // INIT
+      // ============================================
+      function init() {
+        loadProfile();
+        renderSkillList();
+        renderExperienceList();
+        renderEducationList();
+        renderProjectList();
+        renderPDFList();
+        renderMockList();
+      }
+
+      init();
+    </script>
+  </body>
+</html>

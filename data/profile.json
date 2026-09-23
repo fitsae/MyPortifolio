@@ -1,0 +1,62 @@
+{
+  "name": "Fitsum Tibebe",
+  "title": "Front-End Developer,personal trainer,it support",
+  "roles": [
+    "Front-End Developer",
+    "Personal Trainer",
+    "React Developer",
+    "UI Engineer",
+    "Problem Solver"
+  ],
+  "tagline": "I build fast, modern, mobile-first web experiences.",
+  "photo": "assets/images/profile.jpg",
+  "logo": "assets/images/logo.svg",
+  "location": "Addis Ababa, Ethiopia",
+  "email": "fitsum.tibebe.dev@gmail.com",
+  "phone": "+251 963 168 909",
+  "github": "https://github.com/fitsae",
+  "linkedin": "https://www.linkedin.com/in/fitsum-tibebe-597b53429",
+  "bio": "Computer Science graduate with a 3.98 GPA and 6-month advanced front-end training from IBt College of Canada. I specialize in React, Next.js, and responsive design.",
+  "resume": "assets/pdfs/fitsum-resume.pdf",
+  "skills": [
+    {
+      "category": "Frontend",
+      "items": ["React", "Next.js", "JavaScript", "HTML5", "CSS3"]
+    },
+    { "category": "Backend & DB", "items": ["Django", "SQL", "node", "mongo"] },
+    { "category": "Tools", "items": ["Git", "GitHub", "VS Code"] },
+    {
+      "category": "Soft Skills",
+      "items": ["Problem-solving", "Teamwork", "Communication"]
+    }
+  ],
+  "experience": [
+    {
+      "role": "IT Support Intern",
+      "company": "Equatorial Business Group",
+      "location": "Addis Ababa, Ethiopia",
+      "period": "2024",
+      "points": [
+        "Provided technical support to staff, troubleshooting hardware and software.",
+        "Assisted with network and system maintenance to reduce downtime.",
+        "Documented common issues and solutions to improve support efficiency."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "BSc in Computer Science",
+      "school": "CPU College",
+      "location": "Addis Ababa, Ethiopia",
+      "period": "2021 – 2025",
+      "details": "GPA: 3.98 / 4.00"
+    },
+    {
+      "degree": "Advanced Front-End Training",
+      "school": "IBt College of Canada",
+      "location": "Remote",
+      "period": "2025",
+      "details": "6-month intensive program"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "pdfs": [
+    {
+      "id": "resume",
+      "title": "My Resume",
+      "description": "Download my latest resume in PDF format.",
+      "file": "assets/pdfs/fitsum-resume.pdf",
+      "category": "Resume"
+    },
+    {
+      "id": "srs-temar",
+      "title": "Temar SRS Document",
+      "description": "Software Requirements Specification for Temar platform.",
+      "file": "assets/pdfs/temar-srs.pdf",
+      "category": "Documentation"
+    }
+  ]
+}
